@@ -1,0 +1,31 @@
+http = require("http");
+url = require("url");
+var qs = require('querystring');
+const { MongoClient } = require("mongodb");                                                                                                                                       
+const url = "mongodb+srv://surya:lakshmanan@cluster0.lmqbx.mongodb.net/test";
+const client = new MongoClient(url);
+ const dbName = "test";
+                      
+ async function run() {
+    try {
+         await client.connect();
+         console.log("Connected correctly to server");
+         const db = client.db(dbName);
+         const col = db.collection("people");                                                                                                                         
+         let personDocument = {
+             "name": { "first": "surya", "prasaath": "1" },
+             "birth": new Date(1912, 5, 23),                                                                                                                                 
+             "death": new Date(1954, 5, 7),                                                                                                                                  
+             "contribs": [ "Turing machine", "Turing test", "Turingery" ],
+             "views": 1250000
+         }
+         const p = await col.insertOne(personDocument);
+        } catch (err) {
+         console.log(err.stack);
+     }
+
+     finally {
+        await client.close();
+    }
+}
+run().catch(console.dir);
